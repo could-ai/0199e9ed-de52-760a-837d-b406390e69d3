@@ -7,7 +7,7 @@ void main() {
 class VexaApp extends StatelessWidget {
   const VexaApp({super.key});
 
-  @Override
+  @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'VEXA',
@@ -117,7 +117,7 @@ class _VexaHomePageState extends State<VexaHomePage> {
         "Gerando a versão final completa do seu app...",
         actions: [
           TextButton.icon(
-            icon: const Icon(Icons.file_zip),
+            icon: const Icon(Icons.archive),
             label: const Text("Baixar Versão Final"),
             onPressed: () {},
           ),
