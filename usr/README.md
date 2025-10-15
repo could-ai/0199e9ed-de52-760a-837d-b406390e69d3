@@ -1,16 +1,17 @@
-# couldai_user_app
+# VEXA App
 
-A new Flutter project.
+VEXA: Uma inteligência artificial criadora de apps e sites automáticos.
 
-## Getting Started
+## Visão Geral
 
-This project is a starting point for a Flutter application.
+Este projeto é um aplicativo Flutter que permite aos usuários criar aplicativos e sites usando uma interface de conversação com uma IA chamada VEXA.
 
-A few resources to get you started if this is your first Flutter project:
+### Modos de Criação
+- **Modo Protótipo:** Gera a interface visual (UI/UX) do aplicativo.
+- **Modo Versão Final:** Gera o código-fonte completo e funcional.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+### Recursos
+- Geração de UI/UX e código a partir de linguagem natural.
+- Edição via chat.
+- Exportação de protótipos e código-fonte.
+- Geração de link público para compartilhamento.

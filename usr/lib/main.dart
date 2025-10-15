@@ -1,120 +1,228 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const VexaApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class VexaApp extends StatelessWidget {
+  const VexaApp({super.key});
 
-  // This widget is the root of your application.
-  @override
+  @Override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'VEXA',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        brightness: Brightness.dark,
+        primaryColor: Colors.purple,
+        scaffoldBackgroundColor: Colors.black,
+        hintColor: Colors.purpleAccent,
+        fontFamily: 'Roboto',
+        textTheme: const TextTheme(
+          bodyLarge: TextStyle(color: Colors.white),
+          bodyMedium: TextStyle(color: Colors.white70),
+          titleLarge: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          headlineSmall: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        ),
+        colorScheme: ColorScheme.fromSwatch(
+          brightness: Brightness.dark,
+          primarySwatch: Colors.purple,
+        ).copyWith(
+          secondary: Colors.purpleAccent,
+        ),
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const VexaHomePage(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
+class VexaHomePage extends StatefulWidget {
+  const VexaHomePage({super.key});
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<VexaHomePage> createState() => _VexaHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+class _VexaHomePageState extends State<VexaHomePage> {
+  final TextEditingController _textController = TextEditingController();
+  final List<Map<String, dynamic>> _messages = [];
 
-  void _incrementCounter() {
+  @override
+  void initState() {
+    super.initState();
+    _addVexaMessage("Olá! Sou a VEXA. Diga o que quer, e a VEXA cria.");
+  }
+
+  void _addVexaMessage(String text, {List<Widget>? actions}) {
     setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
+      _messages.insert(0, {"sender": "vexa", "text": text, "actions": actions});
     });
+  }
+
+  void _addUserMessage(String text) {
+    setState(() {
+      _messages.insert(0, {"sender": "user", "text": text});
+    });
+  }
+
+  void _handleSubmitted(String text) {
+    if (text.trim().isEmpty) return;
+
+    _addUserMessage(text);
+    _textController.clear();
+
+    // Simulate VEXA's response
+    Future.delayed(const Duration(milliseconds: 500), () {
+      _addVexaMessage(
+        "Entendido. Você quer ver o protótipo ou a versão final?",
+        actions: [
+          ElevatedButton(
+            onPressed: () => _handleChoice("prototype"),
+            child: const Text("🧱 Modo Protótipo"),
+          ),
+          const SizedBox(width: 10),
+          ElevatedButton(
+            onPressed: () => _handleChoice("final"),
+            child: const Text("⚙️ Modo Versão Final"),
+          ),
+        ],
+      );
+    });
+  }
+
+  void _handleChoice(String choice) {
+    // Remove the choice buttons after selection
+    setState(() {
+      _messages.firstWhere((msg) => msg["actions"] != null)["actions"] = null;
+    });
+
+    if (choice == "prototype") {
+      _addVexaMessage(
+        "Gerando seu app em modo protótipo... pronto!",
+        actions: [
+          TextButton.icon(
+            icon: const Icon(Icons.download),
+            label: const Text("Baixar Protótipo"),
+            onPressed: () {},
+          ),
+          TextButton.icon(
+            icon: const Icon(Icons.code),
+            label: const Text("Criar Versão Final"),
+            onPressed: () => _handleChoice("final"),
+          ),
+        ],
+      );
+    } else {
+      _addVexaMessage(
+        "Gerando a versão final completa do seu app...",
+        actions: [
+          TextButton.icon(
+            icon: const Icon(Icons.file_zip),
+            label: const Text("Baixar Versão Final"),
+            onPressed: () {},
+          ),
+          TextButton.icon(
+            icon: const Icon(Icons.link),
+            label: const Text("Gerar Link Público"),
+            onPressed: () {},
+          ),
+        ],
+      );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
       appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
+        title: const Text("VEXA", style: TextStyle(fontWeight: FontWeight.bold)),
+        backgroundColor: Colors.black,
+        elevation: 0,
       ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text('You have pushed the button this many times:'),
-            Text('$_counter', style: Theme.of(context).textTheme.headlineMedium),
-          ],
-        ),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Text(
+              "“Diga o que quer, e a VEXA cria.”",
+              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                color: Colors.purpleAccent,
+                fontStyle: FontStyle.italic,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
+          Expanded(
+            child: ListView.builder(
+              reverse: true,
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              itemCount: _messages.length,
+              itemBuilder: (context, index) {
+                final message = _messages[index];
+                final isVexa = message["sender"] == "vexa";
+                return Align(
+                  alignment: isVexa ? Alignment.centerLeft : Alignment.centerRight,
+                  child: Container(
+                    margin: const EdgeInsets.symmetric(vertical: 5.0),
+                    padding: const EdgeInsets.all(12.0),
+                    decoration: BoxDecoration(
+                      color: isVexa ? Colors.grey[900] : Colors.purple,
+                      borderRadius: BorderRadius.circular(15.0),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          message["text"],
+                          style: const TextStyle(color: Colors.white),
+                        ),
+                        if (message["actions"] != null)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 10.0),
+                            child: Wrap(
+                              spacing: 8.0,
+                              runSpacing: 4.0,
+                              children: message["actions"],
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+          _buildTextComposer(),
+        ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+    );
+  }
+
+  Widget _buildTextComposer() {
+    return Container(
+      margin: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+      decoration: BoxDecoration(
+        color: Colors.grey[900],
+        borderRadius: BorderRadius.circular(30.0),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: TextField(
+              controller: _textController,
+              onSubmitted: _handleSubmitted,
+              decoration: const InputDecoration.collapsed(
+                hintText: "Descreva seu app ou site...",
+              ),
+            ),
+          ),
+          IconButton(
+            icon: const Icon(Icons.send, color: Colors.purpleAccent),
+            onPressed: () => _handleSubmitted(_textController.text),
+          ),
+        ],
+      ),
     );
   }
 }
